@@ -1,29 +1,34 @@
 <template>
-  <div></div>
-  <form action="" @submit.prevent>
-    <h1>Add ur list of todo</h1>
-    <input type="text" v-model="itemTodo" />
-    <button @click="addTOdo">click</button>
-  </form>
-  <div class="tbl-header">
-    <table cellpadding="0" cellspacing="0">
-      <thead>
-        <tr>
-          <th>Id</th>
-          <th>Name</th>
-        </tr>
-      </thead>
-      <thead>
-        <tr v-for="item in listOfTodo" :key="item.id">
-          <th>{{ item.id }}</th>
-          <th>{{ item.itemTodo }}</th>
-          <dev class="x"> 
-            <span>x</span>
-          </dev>
-        </tr>
-      </thead>
-      <body></body>
-    </table>
+  <div class="todo-container">
+    <form @submit.prevent>
+      <h1>My Todo List</h1>
+      <div class="input-container">
+        <input type="text" v-model="itemTodo" placeholder="Add a new task..." />
+        <button @click="addTOdo">Add Task</button>
+      </div>
+    </form>
+    <div class="todo-list">
+      <table>
+        <thead>
+          <tr>
+            <th>Task #</th>
+            <th>Description</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in listOfTodo" :key="item.id" class="todo-item">
+            <td>{{ item.id }}</td>
+            <td>{{ item.itemTodo }}</td>
+            <td>
+              <button class="delete-btn" @click="removeItem(item)">
+                <span>×</span>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -71,65 +76,116 @@ const updateLocalStorage = () => {
         listOfTodo.value = JSON.parse(localStorage.getItem('data'))
     }
 }
+const removeItem = (item) => {
+    listOfTodo.value = listOfTodo.value.filter(todo => todo.id !== item.id);
+    updateLocalStorage();
+    alert("Todo item removed successfully!");
+}
 </script>
 
 <style>
+.todo-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: #f8f9fa;
+  min-height: 100vh;
+}
+
 form {
   text-align: center;
-  margin-top: 50px;
+  margin-bottom: 2rem;
 }
-input {
-  background: rgb(255, 251, 245);
-  height: 40px;
-  width: 50%;
-  border: 1px solid rgb(126, 162, 182);
-}
-button {
-  width: 100px;
-  height: 40px;
-  margin-left: 10px;
-  background:  rgb(18, 195, 65);
-  border: none;
-  font-size: 16px;
-  color: white;
-}
-table {
-  width: 70%;
-  table-layout: fixed;
-  margin: 50px auto;
-  background-color:  rgb(2, 29, 9);
-  border-radius: 20px;
-}
-.tbl-header {
-  background-color: rgba(255, 255, 255, 0.3);
-}
-.tbl-content {
-  height: 300px;
-  overflow-x: auto;
-  margin-top: 0px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-}
-th {
-  padding: 20px 15px;
-  text-align: left;
-  font-weight: 500;
-  font-size: 12px;
-  color: #fff;
-  text-transform: uppercase;
-}
-td {
-  padding: 15px;
-  text-align: left;
-  vertical-align: middle;
-  font-weight: 300;
-  font-size: 12px;
-  color: #fff;
-  border-bottom: solid 1px rgba(255, 255, 255, 0.1);
-}
-.x {
-    background-color: red;
-    width: 400px !important;
-    height: 40px;
 
+h1 {
+  color: #2c3e50;
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.input-container {
+  display: flex;
+  gap: 1rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+input:focus {
+  outline: none;
+  border-color: #4CAF50;
+}
+
+button {
+  padding: 0.75rem 1.5rem;
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background: #45a049;
+}
+
+.todo-list {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background: #4CAF50;
+  color: white;
+  padding: 1rem;
+  text-align: left;
+}
+
+td {
+  padding: 1rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.todo-item {
+  transition: background-color 0.3s ease;
+}
+
+.todo-item:hover {
+  background-color: #f8f9fa;
+}
+
+.delete-btn {
+  background: #dc3545;
+  color: white;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+
+.delete-btn:hover {
+  background: #c82333;
 }
 </style>
